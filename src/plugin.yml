@@ -1,0 +1,9 @@
+author: StrangeOne101
+name: Change
+main: com.strangeone101.elementumchange.ChangePlugin
+version: 1.0
+depend: [ProjectKorra]
+commands:
+  change:
+    description: Allows the user to change their element
+    default: true
