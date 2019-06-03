@@ -8,6 +8,8 @@ import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent.Result;
 import com.strangeone101.easygui.MenuBase;
 import com.strangeone101.easygui.MenuItem;
+import com.strangeone101.elementumchange.ChangeConfig;
+import com.strangeone101.elementumchange.ChangePlugin;
 import com.strangeone101.elementumchange.util.DatabaseUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,7 +23,7 @@ public class MenuChangeFinalize extends MenuBase {
 	public Element elementToChangeTo;
 
 	public MenuChangeFinalize(Element element) {
-		super("Select an element to remove", 3);
+		super(ChangeConfig.getLang("Menu.Remove.Title"), 3);
 		
 		this.elementToChangeTo = element;
 	}
@@ -67,7 +69,7 @@ public class MenuChangeFinalize extends MenuBase {
 		}
 		
 		
-		MenuItem item = new MenuItem(color + "" + ChatColor.BOLD + "Remove your " + element.getName() + element.getType().getBending(), mat) {
+		MenuItem item = new MenuItem(color + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.Remove.ItemTitle", element), mat) {
 			
 			@Override
 			public void onClick(Player clickedPlayer) {
@@ -85,7 +87,7 @@ public class MenuChangeFinalize extends MenuBase {
 					}
 					GeneralMethods.removeUnusableAbilities(bPlayer.getName());
 					
-					player.sendMessage(elementToChangeTo.getColor() + "You changed your element and are now a " + elementToChangeTo.getName() + elementToChangeTo.getType().getBender() + "!");
+					player.sendMessage(elementToChangeTo.getColor() + ChangeConfig.getLang("Menu.Change.ConfirmationMsg", elementToChangeTo));
 					
 					DatabaseUtil.setCooldown(player, System.currentTimeMillis());
 					GeneralMethods.saveElements(bPlayer);
@@ -96,10 +98,12 @@ public class MenuChangeFinalize extends MenuBase {
 		};
 		
 		if (has) {
-			item.addDescription(ChatColor.GRAY + "Click to remove this element and");
-			item.addDescription(ChatColor.GRAY + "change it for " + elementToChangeTo.getName() + elementToChangeTo.getType().getBending() + "!");
+			ChangePlugin.lengthSplit(ChangeConfig.getLang("Menu.Remove.AlreadyHave", elementToChangeTo), ChatColor.GRAY, ChangeConfig.getWrapLength())
+					.forEach(line -> item.addDescription(line));
+			//item.addDescription(ChatColor.GRAY + "Click to remove this element and");
+			//item.addDescription(ChatColor.GRAY + "change it for " + elementToChangeTo.getName() + elementToChangeTo.getType().getBending() + "!");
 		} else {
-			item.addDescription(ChatColor.RED + "You don't have this element!");
+			item.addDescription(ChatColor.RED + ChangeConfig.getLang("Menu.Remove.DoNotHave"));
 		}
 		
 		return item;

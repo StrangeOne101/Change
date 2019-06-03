@@ -9,6 +9,7 @@ import com.projectkorra.projectkorra.event.PlayerChangeElementEvent.Result;
 import com.strangeone101.easygui.MenuBase;
 import com.strangeone101.easygui.MenuItem;
 import com.strangeone101.elementumchange.ChangeConfig;
+import com.strangeone101.elementumchange.ChangePlugin;
 import com.strangeone101.elementumchange.util.DatabaseUtil;
 import com.strangeone101.elementumchange.util.RunnablePlayer;
 import org.bukkit.Bukkit;
@@ -28,7 +29,7 @@ public class MenuChange extends MenuBase {
 	public Player player;
 
 	public MenuChange() {
-		super("Change your element", 3);
+		super(ChangeConfig.getLang("Menu.Change.Title"), 3);
 	}
 	
 	@Override
@@ -39,17 +40,18 @@ public class MenuChange extends MenuBase {
 		
 		if (bPlayer.getElements().size() == 0) {
 			this.closeMenu(player);
-			player.sendMessage(ChatColor.RED + "You can't change elements if you aren't a bender! Go to /choose instead!");
+			player.sendMessage(ChatColor.RED + ChangeConfig.getLang("NoElements"));
 			return;
 		}
 		
 		if (bPlayer.getElements().get(0) == Element.CHI && DatabaseUtil.getElementCountFromPlayer(player) >= 4 && ChangeConfig.isChiDifferent()) {
 			MenuBase instance = this;
-			List<String> lore = new ArrayList<String>();
+			/*List<String> lore = new ArrayList<String>();
 			lore.add(ChatColor.GRAY + "Clicking YES will remove your chiblocking");
 			lore.add(ChatColor.GRAY + "and replace it with all the elements. You");
 			lore.add(ChatColor.GRAY + "will not be able to change back again for");
-			lore.add(ChatColor.GRAY + "another two days.");
+			lore.add(ChatColor.GRAY + "another two days.");*/
+			List<String> lore = ChangePlugin.lengthSplit(ChangeConfig.getLang("Menu.Change.ChiConfirm"), ChatColor.GRAY, ChangeConfig.getWrapLength());
 			
 			//We open a confirmation menu because players might not realize switching to chi removes other
 			//elements. This is just a simple YES/NO gui.
@@ -72,7 +74,7 @@ public class MenuChange extends MenuBase {
 					GeneralMethods.saveElements(bPlayer);
 					GeneralMethods.saveSubElements(bPlayer);
 					
-					player.sendMessage(Element.AVATAR.getColor() + "You removed your chi and are now all four elements!");
+					player.sendMessage(Element.AVATAR.getColor() + ChangeConfig.getLang("Menu.Change.ChiRemove"));
 					DatabaseUtil.setCooldown(player, System.currentTimeMillis());
 					player.closeInventory();
 				}
@@ -84,7 +86,7 @@ public class MenuChange extends MenuBase {
 					player.closeInventory();
 				}
 				
-			}, lore, Arrays.asList(new String[] {ChatColor.GRAY + "Switch back to your elements another time"}));
+			}, lore, Arrays.asList(new String[] {ChatColor.GRAY + ChangeConfig.getLang("Menu.Change.ChiCancelAll")}));
 			
 			switchMenu(player, confirmation);
 		}
@@ -153,7 +155,7 @@ public class MenuChange extends MenuBase {
 		MenuBase instance = this;
 		
 		
-		MenuItem item = new MenuItem(color + "" + ChatColor.BOLD + "Change to " + element.getName(), mat) {
+		MenuItem item = new MenuItem(color + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.Change.Item").replace("%element%",element.getName()), mat) {
 
 			@Override
 			public void onClick(Player player) {
@@ -164,11 +166,7 @@ public class MenuChange extends MenuBase {
 					
 					if (element == Element.CHI  && ChangeConfig.isChiDifferent()) { //So much work for just chi :P
 						if (bPlayer.getElements().size() > 1) {
-							List<String> lore = new ArrayList<String>();
-							lore.add(ChatColor.GRAY + "Clicking YES will remove all your other");
-							lore.add(ChatColor.GRAY + "elements and replace them with chi. You");
-							lore.add(ChatColor.GRAY + "will not be able to change this again for");
-							lore.add(ChatColor.GRAY + "another two days.");
+							List<String> lore = ChangePlugin.lengthSplit(ChangeConfig.getLang("Menu.Change.ChiConfirm2"), ChatColor.GRAY, ChangeConfig.getWrapLength());
 							
 							//We open a confirmation menu because players might not realize switching to chi removes other
 							//elements. This is just a simple YES/NO gui.
@@ -185,10 +183,11 @@ public class MenuChange extends MenuBase {
 
 								@Override
 								public void run(Player clickedplayer) {
-									switchMenu(player, instance);
+									//switchMenu(player, this.prev);
+									switchMenu(player, new MenuChange());
 								}
 								
-							}, lore, Arrays.asList(new String[] {ChatColor.GRAY + "Cancel and pick another element"}));
+							}, lore, Arrays.asList(new String[] {ChatColor.GRAY + ChangeConfig.getLang("Menu.Change.ChiCancel")}));
 							
 							switchMenu(player, confirmation);
 						} else {
@@ -205,8 +204,9 @@ public class MenuChange extends MenuBase {
 								}
 							}
 							GeneralMethods.removeUnusableAbilities(bPlayer.getName());
-							
-							player.sendMessage(element.getColor() + "You changed your element and are now a " + element.getName() + element.getType().getBender() + "!");
+
+							String msg = ChangeConfig.getLang("Menu.Change.ConfirmationMsg", element);
+							player.sendMessage(element.getColor() + msg);
 							
 							GeneralMethods.saveElements(bPlayer);
 							GeneralMethods.saveSubElements(bPlayer);
@@ -233,7 +233,8 @@ public class MenuChange extends MenuBase {
 									}
 								}
 								GeneralMethods.removeUnusableAbilities(bPlayer.getName());
-								player.sendMessage(element.getColor() + "You changed your element and are now a " + element.getName() + element.getType().getBender() + "!");
+								String msg = ChangeConfig.getLang("Menu.Change.ConfirmationMsg", element);
+								player.sendMessage(element.getColor() + msg);
 								
 								DatabaseUtil.setCooldown(player, System.currentTimeMillis());
 								GeneralMethods.saveElements(bPlayer);
@@ -260,8 +261,9 @@ public class MenuChange extends MenuBase {
 								
 								Bukkit.getServer().getPluginManager().callEvent(new PlayerChangeElementEvent(player, player, element, Result.ADD));
 								Bukkit.getServer().getPluginManager().callEvent(new PlayerChangeElementEvent(player, player, oldElement, Result.REMOVE));
-								
-								player.sendMessage(element.getColor() + "You changed your element and are now a " + element.getName() + element.getType().getBender() + "!");
+
+								String msg = ChangeConfig.getLang("Menu.Change.ConfirmationMsg", element, true);
+								player.sendMessage(element.getColor() + msg);
 								
 								DatabaseUtil.setCooldown(player, System.currentTimeMillis());
 								GeneralMethods.saveElements(bPlayer);
@@ -304,9 +306,10 @@ public class MenuChange extends MenuBase {
 		};
 		
 		if (has) {
-			item.addDescription(ChatColor.RED + "You already have this element!");
+			item.addDescription(ChatColor.RED + ChangeConfig.getLang("Menu.Change.AlreadyHave"));
 		} else {
-			item.addDescription(ChatColor.GRAY + "Click to become a " + color + element.getName() + element.getType().getBender());
+			String msg = ChangeConfig.getLang("Menu.Change.DoNotHave", element).replace("%bender%", color + element.getName() + element.getType().getBender());
+			item.addDescription(ChatColor.GRAY + msg);
 		}
 		
 		return item;
@@ -314,15 +317,13 @@ public class MenuChange extends MenuBase {
 	}
 	
 	public static MenuItem getHelp() {
-		MenuItem item = new MenuItem(ChatColor.YELLOW + "What do I do?", new MaterialData(Material.PAPER)) {
+		MenuItem item = new MenuItem(ChatColor.YELLOW + ChangeConfig.getLang("Menu.Change.HelpTitle"), new MaterialData(Material.PAPER)) {
 			@Override
 			public void onClick(Player player) {} //Do nothing, as help is displayed in the lore
 		};
-		
-		item.addDescription(ChatColor.GRAY + "Just select what element you want to change");
-		item.addDescription(ChatColor.GRAY + "to. If you have more than one element, you");
-		item.addDescription(ChatColor.GRAY + "will be prompted on which element to remove.");
-		item.addDescription(ChatColor.GRAY + "Easy, right? :D");
+
+		ChangePlugin.lengthSplit(ChangeConfig.getLang("Menu.Change.HelpLore"), ChatColor.GRAY, ChangeConfig.getWrapLength())
+				.forEach(line -> item.addDescription(line));
 		
 		return item;
 	}
@@ -349,8 +350,9 @@ public class MenuChange extends MenuBase {
 		GeneralMethods.removeUnusableAbilities(bPlayer.getName());
 		GeneralMethods.saveElements(bPlayer);
 		GeneralMethods.saveSubElements(bPlayer);
-		
-		player.sendMessage(Element.CHI.getColor() + "You changed your element and are now a " + Element.CHI.getName() + Element.CHI.getType().getBender() + "!");
+
+		String msg = ChangeConfig.getLang("Menu.Change.ConfirmationMsg").replace("%bender%", Element.CHI.getName() + Element.CHI.getType().getBender());
+		player.sendMessage(Element.CHI.getColor() + msg);
 	}
 
 }

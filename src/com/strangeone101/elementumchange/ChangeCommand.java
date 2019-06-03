@@ -28,26 +28,26 @@ public class ChangeCommand extends PKCommand implements CommandExecutor {
 			if (sender instanceof Player) {
 				long cooldown = DatabaseUtil.getCooldownFromPlayer((Player) sender);
 				if (cooldown > 0 && !sender.hasPermission("bending.command.rechoose")) {
-					sender.sendMessage(ChatColor.RED + "You can change your element again in " + getTime(cooldown));
+					sender.sendMessage(ChatColor.RED + ChangeConfig.getLang("Command.OnCooldown").replace("%time%", getTime(cooldown) + ""));
 				} else {
 					MenuChange menu = new MenuChange();
 					menu.openMenu((Player) sender);
 				}
 			} else {
-				sender.sendMessage(ChatColor.RED + "You must be a player to run this command!");
+				sender.sendMessage(ChatColor.RED + ChangeConfig.getLang("Command.NotAPlayer"));
 			}
 		} else if (args[0].equalsIgnoreCase("force") || args[0].equalsIgnoreCase("reset")) {
 			if (args.length == 1) {
-				sender.sendMessage(ChatColor.RED + "Usage is /change reset <user>");
+				sender.sendMessage(ChatColor.RED + ChangeConfig.getLang("Command.CooldownUsage"));
 			} else if (Bukkit.getOfflinePlayer(args[1]) == null) {
-				sender.sendMessage(ChatColor.RED + "User not found!");
+				sender.sendMessage(ChatColor.RED + ChangeConfig.getLang("Command.NoPlayerFound").replace("%player%", args[1]));
 			} else {
 				UUID id = Bukkit.getOfflinePlayer(args[1]).getUniqueId();
 				DatabaseUtil.resetCooldown(id);
-				sender.sendMessage(ChatColor.GREEN + "The /change cooldown has been reset for user " + Bukkit.getOfflinePlayer(args[1]).getName());
+				sender.sendMessage(ChatColor.GREEN + ChangeConfig.getLang("Command.CooldownReset").replace("%player%", Bukkit.getOfflinePlayer(args[1]).getName()));
 			}
 		} else {
-			sender.sendMessage(ChatColor.RED + "Usage is /change reset <user>");
+			sender.sendMessage(ChatColor.RED + ChangeConfig.getLang("Command.CooldownUsage"));
 		}
 		
 		
@@ -55,7 +55,7 @@ public class ChangeCommand extends PKCommand implements CommandExecutor {
 	}
 
 	private String getTime(long cooldown) {
-		cooldown = cooldown += 1000 * 60; //Add another minute to the clock. That way, it never shows 0m remaining
+		cooldown = cooldown + 1000 * 60; //Add another minute to the clock. That way, it never shows 0m remaining
 		long minuteLong = 1000 * 60;
 		long hourLong = 1000 * 60 * 60;
 		long dayLong = 1000 * 60 * 60 * 24;

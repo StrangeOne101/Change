@@ -2,6 +2,7 @@ package com.strangeone101.elementumchange.menu;
 
 import com.strangeone101.easygui.MenuBase;
 import com.strangeone101.easygui.MenuItem;
+import com.strangeone101.elementumchange.ChangeConfig;
 import com.strangeone101.elementumchange.util.RunnablePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,7 +21,7 @@ public class MenuConfirm extends MenuBase
 	
 	public MenuConfirm(MenuBase previousMenu, RunnablePlayer confirm, RunnablePlayer cancel, List<String> confirmLore, List<String> cancelLore)
 	{
-		super("Are you sure?", 3);
+		super(ChangeConfig.getLang("Menu.Confirm.Title"), 3);
 		this.prev = previousMenu;
 		this.runConfirm = confirm;
 		this.runCancel = cancel;
@@ -34,7 +35,7 @@ public class MenuConfirm extends MenuBase
 	@SuppressWarnings("deprecation")
 	protected MenuItem getConfirm()
 	{
-		MenuItem confirm = new MenuItem(ChatColor.GREEN + "" + ChatColor.BOLD + "YES", new MaterialData(Material.WOOL, (byte)5)) {
+		MenuItem confirm = new MenuItem(ChatColor.GREEN + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.Confirm.Yes"), new MaterialData(Material.WOOL, (byte)5)) {
 			@Override
 			public void onClick(Player player) 
 			{
@@ -49,7 +50,7 @@ public class MenuConfirm extends MenuBase
 	@SuppressWarnings("deprecation")
 	private MenuItem getCancel()
 	{
-		MenuItem cancel = new MenuItem(ChatColor.RED + "" + ChatColor.BOLD + "NO", new MaterialData(Material.WOOL, (byte)14)) {
+		MenuItem cancel = new MenuItem(ChatColor.RED + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.Confirm.No"), new MaterialData(Material.WOOL, (byte)14)) {
 			@Override
 			public void onClick(Player player) 
 			{

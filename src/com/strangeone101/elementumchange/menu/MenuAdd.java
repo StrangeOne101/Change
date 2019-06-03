@@ -7,6 +7,7 @@ import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent.Result;
 import com.strangeone101.easygui.MenuBase;
 import com.strangeone101.easygui.MenuItem;
+import com.strangeone101.elementumchange.ChangeConfig;
 import com.strangeone101.elementumchange.util.DatabaseUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,7 +27,7 @@ public class MenuAdd extends MenuBase {
 	private List<Element> toRemove = new ArrayList<Element>();
 
 	public MenuAdd(Element... elementsToRemove) {
-		super("Choose your elements", 3);
+		super(ChangeConfig.getLang("Menu.ReAdd.Title"), 3);
 		
 		toRemove.addAll(Arrays.asList(elementsToRemove));
 	}
@@ -65,7 +66,7 @@ public class MenuAdd extends MenuBase {
 			
 			GeneralMethods.saveElements(bPlayer);
 			
-			player.sendMessage(Element.AVATAR.getColor() + "You changed your element and are now a multi-bender!");
+			player.sendMessage(Element.AVATAR.getColor() + ChangeConfig.getLang("Menu.ReAdd.Confirm"));
 			
 			DatabaseUtil.setCooldown(player, System.currentTimeMillis());
 			GeneralMethods.saveElements(bPlayer);
@@ -109,7 +110,7 @@ public class MenuAdd extends MenuBase {
 			}
 		}
 		
-		MenuItem item = new MenuItem(color + "" + ChatColor.BOLD + "Change to " + element.getName(), mat) {
+		MenuItem item = new MenuItem(color + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.ReAdd.ItemTitle", element), mat) {
 
 			@Override
 			public void onClick(Player player) {
@@ -126,20 +127,18 @@ public class MenuAdd extends MenuBase {
 		};
 		
 		if (has) {
-			item.addDescription(ChatColor.RED + "You already have this element!");
+			item.addDescription(ChatColor.RED + ChangeConfig.getLang("Menu.ReAdd.AlreadyHave"));
 		} else {
-			item.addDescription(ChatColor.GRAY + "Become a " + element.getName() + element.getType().getBender());
+			item.addDescription(ChatColor.GRAY + ChangeConfig.getLang("Menu.ReAdd.DoNotHave", element));
 		}
-		
+		int c = count - elements.size();
+		item.addDescription(ChatColor.GRAY + "");
 		if (elements.contains(element)) {
 			item.setEnchanted(true);
-			item.addDescription(ChatColor.GRAY + "");
-			item.addDescription(ChatColor.RED + "" + ChatColor.BOLD + "ELEMENT SELECTED");
-			item.addDescription(ChatColor.RED + "You can select " + (count - elements.size()) + " more element" + ((count - elements.size()) == 0 ? "" : "s"));
-		} else if (!has) {
-			item.addDescription(ChatColor.GRAY + "");
-			item.addDescription(ChatColor.RED + "You can select " + (count - elements.size()) + " more element" + ((count - elements.size()) == 0 ? "" : "s"));
+			item.addDescription(ChatColor.RED + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.ReAdd.Selected"));
 		}
+		String msg = ChangeConfig.getLang("Menu.ReAdd.Remain").replace("%amount%", c + "").replace("%plural%", (c == 0 ? "" : "s"));
+		item.addDescription(ChatColor.RED + msg);
 		
 		return item;
 	}

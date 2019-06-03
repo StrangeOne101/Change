@@ -8,6 +8,8 @@ import com.projectkorra.projectkorra.event.PlayerChangeElementEvent;
 import com.projectkorra.projectkorra.event.PlayerChangeElementEvent.Result;
 import com.strangeone101.easygui.MenuBase;
 import com.strangeone101.easygui.MenuItem;
+import com.strangeone101.elementumchange.ChangeConfig;
+import com.strangeone101.elementumchange.ChangePlugin;
 import com.strangeone101.elementumchange.util.RunnablePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -16,11 +18,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.material.MaterialData;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MenuChoose extends MenuBase
 {
@@ -30,7 +28,7 @@ public class MenuChoose extends MenuBase
 	
 	public MenuChoose(OfflinePlayer player) 
 	{
-		super("Please select an element!", 3);
+		super(ChangeConfig.getLang("Menu.Choose.Title"), 3);
 		this.thePlayer = player;
 	}
 	
@@ -118,7 +116,7 @@ public class MenuChoose extends MenuBase
 			{
 				if (thePlayer instanceof Player && !(((Player)thePlayer).hasPermission("bending." + element.getName().toLowerCase())) && thePlayer.getName().equals(openPlayer.getName()))
 				{
-					player.sendMessage(ChatColor.RED + "You don't have permission to choose this element!");
+					player.sendMessage(ChatColor.RED + ChangeConfig.getLang("Menu.Choose.NoPermission"));
 					player.closeInventory();
 					return;
 				}
@@ -130,7 +128,7 @@ public class MenuChoose extends MenuBase
 					}
 				}
 				GeneralMethods.removeUnusableAbilities(bPlayer.getName());
-				if (thePlayer instanceof Player) ((Player)thePlayer).sendMessage(finalColor + "You are now " + element.getName() + element.getType().getBender() + "!");
+				if (thePlayer instanceof Player) ((Player)thePlayer).sendMessage(finalColor + ChangeConfig.getLang("Menu.Choose.Confirm", element));
 				GeneralMethods.saveElements(BendingPlayer.getBendingPlayer(thePlayer));
 				if (thePlayer instanceof Player)
 				{
@@ -145,8 +143,8 @@ public class MenuChoose extends MenuBase
 				switchMenu(player, instance);
 				
 			}
-		}, Arrays.asList(new String[] {ChatColor.GRAY + "Are you sure you want to choose " + color + element.getName() + ChatColor.RESET + ChatColor.GRAY + "?", ChatColor.GRAY + "You won't be able to change for 2 days!"})
-		, Arrays.asList(new String[] {ChatColor.GRAY + "Cancel and pick another element"}));
+		}, ChangePlugin.lengthSplit(ChangeConfig.getLang("Menu.Choose.ConfirmationYes").replace("%element%", color + element.getName() + ChatColor.RESET + ChatColor.GRAY), ChatColor.GRAY, ChangeConfig.getWrapLength())
+		, ChangePlugin.lengthSplit(ChangeConfig.getLang("Menu.Choose.ConfirmationNo"), ChatColor.GRAY, ChangeConfig.getWrapLength()));
 		MenuItem item = new MenuItem(color + "Choose " + ChatColor.BOLD + element.getName(), mat) {
 
 			@Override
@@ -154,7 +152,7 @@ public class MenuChoose extends MenuBase
 			{
 				if (BendingPlayer.getBendingPlayer(thePlayer) != null && !BendingPlayer.getBendingPlayer(thePlayer).getElements().isEmpty() && !openPlayer.hasPermission("bending.command.rechoose")) {
 					{
-						openPlayer.sendMessage(ChatColor.RED + "You don't have permission to change your element!");
+						openPlayer.sendMessage(ChatColor.RED + ChangeConfig.getLang("Menu.Choose.NoPermission"));
 						closeMenu(openPlayer);
 					}
 				}
@@ -162,12 +160,12 @@ public class MenuChoose extends MenuBase
 				confirm.openMenu(openPlayer);
 			}
 		};
-		item.setDescriptions(Arrays.asList(new String[] {ChatColor.GRAY + "Become a " + element.getName() + element.getType().getBender()}));
+		item.setDescriptions(Arrays.asList(new String[] {ChatColor.GRAY + ChangeConfig.getLang("Menu.ReAdd.DoNotHave", element)}));
 		
 		return item;
 	}
 	
-	protected List<String> getDesc(String line)
+	/*protected List<String> getDesc(String line)
 	{
 		int maxLenght = 45;
 		Pattern p = Pattern.compile("\\G\\s*(.{1,"+maxLenght+"})(?=\\s|$)", Pattern.DOTALL);
@@ -178,21 +176,16 @@ public class MenuChoose extends MenuBase
 			l.add(ChatColor.GRAY + m.group(1));
 		}
 		return l;
-	}
+	}*/
 
-	public void openMenu(Player player) 
-	{
+	public void openMenu(Player player) { //
 		openPlayer = player; 
 		
-		if (BendingPlayer.getBendingPlayer(thePlayer).isPermaRemoved())
-		{
-			if (openPlayer.getName().equals(thePlayer.getName()))
-			{
-				player.sendMessage(ChatColor.RED + "You cannot choose an element because your bending has been permanently removed!");
-			}
-			else
-			{
-				player.sendMessage(ChatColor.RED + "This player has had their bending permanently removed!");
+		if (BendingPlayer.getBendingPlayer(thePlayer).isPermaRemoved()) {
+			if (openPlayer.getName().equals(thePlayer.getName())) {
+				player.sendMessage(ChatColor.RED + ChangeConfig.getLang("Menu.Choose.PermRemoved"));
+			} else {
+				player.sendMessage(ChatColor.RED + ChangeConfig.getLang("Menu.Choose.PermRemovedOther"));
 			}
 			closeMenu(player);
 			return;
