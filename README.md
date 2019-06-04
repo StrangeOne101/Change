@@ -12,4 +12,5 @@ Change, as the name suggests, allows players to change their element with ease.
 
 # Versions
 For the 1.12 version, click [here](https://github.com/StrangeOne101/Change)
+
 For the 1.13 version, click [here](https://github.com/StrangeOne101/Change/tree/1.13)
