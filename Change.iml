@@ -10,21 +10,21 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/../ProjectKorra/target/original-ProjectKorra-1.8.7.jar!/" />
+          <root url="jar://D:/Toby/Documents/Servers/Minecraft/1.13 Server/spigot-1.13.2-R0.1-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES />
+        <SOURCES>
+          <root url="jar://D:/Toby/Documents/Servers/Minecraft/1.13 Server/spigot-1.13.2-R0.1-SNAPSHOT.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://D:/Toby/Documents/Servers/Minecraft/EnderBenders/Main 1.12/spigot-1.12.2-R0.1-SNAPSHOT.jar!/" />
+          <root url="jar://D:/Toby/Documents/Servers/Minecraft/1.13 Server/plugins/ProjectKorra-1.8.8 @ 1.13.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://D:/Toby/Documents/Servers/Minecraft/EnderBenders/Main 1.12/spigot-1.12.2-R0.1-SNAPSHOT.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
   </component>

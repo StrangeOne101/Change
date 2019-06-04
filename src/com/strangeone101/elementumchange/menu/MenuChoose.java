@@ -84,7 +84,7 @@ public class MenuChoose extends MenuBase
 	@SuppressWarnings("deprecation")
 	public MenuItem getChooseElement(final Element element)
 	{
-		MaterialData mat = new MaterialData(Material.STAINED_GLASS, (byte) 15);
+		MaterialData mat = new MaterialData(Material.BLACK_STAINED_GLASS);
 		ChatColor color = ChatColor.RED;
 		BendingPlayer bPlayer = BendingPlayer.getBendingPlayer(thePlayer);
 		final boolean has = bPlayer.hasElement(element);
@@ -93,16 +93,16 @@ public class MenuChoose extends MenuBase
 				mat = new MaterialData(Material.NETHERRACK);
 				color = ChatColor.RED;
 			} else if (element == Element.WATER) {
-				mat = new MaterialData(Material.STAINED_CLAY, (byte)11);
+				mat = new MaterialData(Material.BLUE_TERRACOTTA);
 				color = ChatColor.BLUE;
 			} else if (element == Element.EARTH) {
-				mat = new MaterialData(Material.GRASS);
+				mat = new MaterialData(Material.GRASS_BLOCK);
 				color = ChatColor.GREEN;
 			} else if (element == Element.AIR) {
 				mat = new MaterialData(Material.QUARTZ_BLOCK);
 				color = ChatColor.GRAY;
 			} else if (element == Element.CHI) {
-				mat = new MaterialData(Material.STAINED_CLAY, (byte)4);
+				mat = new MaterialData(Material.YELLOW_TERRACOTTA);
 				color = ChatColor.GOLD;
 			}
 		}

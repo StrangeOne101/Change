@@ -35,7 +35,7 @@ public class MenuConfirm extends MenuBase
 	@SuppressWarnings("deprecation")
 	protected MenuItem getConfirm()
 	{
-		MenuItem confirm = new MenuItem(ChatColor.GREEN + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.Confirm.Yes"), new MaterialData(Material.WOOL, (byte)5)) {
+		MenuItem confirm = new MenuItem(ChatColor.GREEN + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.Confirm.Yes"), new MaterialData(Material.LIME_WOOL)) {
 			@Override
 			public void onClick(Player player) 
 			{
@@ -50,7 +50,7 @@ public class MenuConfirm extends MenuBase
 	@SuppressWarnings("deprecation")
 	private MenuItem getCancel()
 	{
-		MenuItem cancel = new MenuItem(ChatColor.RED + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.Confirm.No"), new MaterialData(Material.WOOL, (byte)14)) {
+		MenuItem cancel = new MenuItem(ChatColor.RED + "" + ChatColor.BOLD + ChangeConfig.getLang("Menu.Confirm.No"), new MaterialData(Material.RED_WOOL)) {
 			@Override
 			public void onClick(Player player) 
 			{
